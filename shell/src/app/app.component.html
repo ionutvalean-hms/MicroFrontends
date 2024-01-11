@@ -1,0 +1,40 @@
+<style>
+  main {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: inherit;
+    position: relative;
+  }
+
+</style>
+
+<main class="main">
+  <div>
+    <h1>Hello, {{ title }}</h1>
+
+    <span>Congratulations! Your shell is running. 🎉</span>
+
+    <br/>
+    <br/>
+    <textarea [value]="value"></textarea>
+    <button (click)="onPublishClick()">Publish Shell Topic</button>
+<!--    <br/>-->
+<!--    <br/>-->
+<!--    <span>Angular app</span>-->
+<!--    <br/>-->
+<!--    <iframe src="http://localhost:56289/"></iframe>-->
+
+    <br/>
+    <br/>
+    <span>React app</span>
+    <br/>
+    <iframe id="reactIframe" src="http://localhost:3000/"></iframe>
+  </div>
+</main>
+
+
+<router-outlet></router-outlet>
