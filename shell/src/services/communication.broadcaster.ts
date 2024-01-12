@@ -1,14 +1,4 @@
-import {ClientCommunicationBase} from "./client.comunication-base";
+import {CommunicationClient} from "./comunication.client";
 
-export class CommunicationBroadcaster extends ClientCommunicationBase {
-    public setInternalTopics(topics: string[]): void {
-        this.subscribedTopics = {};
-
-        for (const topic of topics) {
-            this.subscribedTopics[topic] = this.broadcastInternalSubscribedTopic;
-        }
-    }
-
-    private broadcastInternalSubscribedTopic() {
-    }
+export class CommunicationBroadcaster extends CommunicationClient {
 }

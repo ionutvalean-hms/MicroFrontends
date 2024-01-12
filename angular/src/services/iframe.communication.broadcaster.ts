@@ -3,29 +3,37 @@ import {MessageType, OnChangeType, ValueType} from "./interfaces";
 import {CommunicationHub} from "./communication.hub";
 
 export class IframeCommunicationBroadcaster extends CommunicationBroadcaster {
-    constructor(hub: CommunicationHub, private context: string) {
-        super(hub);
+    constructor(hub: CommunicationHub, name: string, private contextWindow: Window) {
+        super(hub, name);
 
-        window.addEventListener("message", (event) => {
+        try {
+
+          window.addEventListener("message", (event) => {
             if (!event.data || !event.data.type) {
-                return;
+              return;
             }
+
+            console.log(`shell event origin '${event.origin}' message: ${JSON.stringify(event.data)}`);
 
             switch (event.data.type) {
-                case MessageType.Publish:
-                    this.hub.publish(event.data.topic, event.data.value, this);
-                    break;
+              case MessageType.Publish:
+                this.hub.publish(event.data.subject, event.data.value, this);
+                break;
             }
-        });
+          });
+        }
+        catch (e) {
+          console.log(e);
+        }
     }
-    public publish(topic: string, value: ValueType): void {
+    public override publish(subject: string, value: ValueType): void {
         if (!window || !window.postMessage) {
             return;
         }
 
         const messageObject = {
             type: MessageType.Publish,
-            topic: topic,
+            subject: subject,
             value: value
         };
 
@@ -33,10 +41,10 @@ export class IframeCommunicationBroadcaster extends CommunicationBroadcaster {
     }
 
     private transportMessage(message: any) {
-        window.postMessage(message, "*");
+      this.contextWindow.postMessage(message, "*");
 
         console.log(message);
     }
-    subscribe(topic: string, onChange: OnChangeType): void {
+    public override subscribe(subject: string, onChange: OnChangeType): void {
     }
 }

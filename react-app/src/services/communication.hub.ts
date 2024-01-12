@@ -1,6 +1,7 @@
 import {ICommunicationClient, OnChangeType, ValueType} from "./interfaces";
-import {ClientCommunicationBase} from "./client.comunication-base";
+import {CommunicationClient} from "./comunication.client";
 import {IframeCommunicationBroadcaster} from "./iframe.communication.broadcaster";
+import {CommunicationBroadcaster} from "./communication.broadcaster";
 
 export class CommunicationHub {
     protected clients: ICommunicationClient[] = [];
@@ -11,20 +12,20 @@ export class CommunicationHub {
             return existingClient;
         }
 
-        const result: ICommunicationClient = new ClientCommunicationBase(this, name);
+        const result: ICommunicationClient = new CommunicationClient(this, name);
 
         this.clients.push(result);
 
         return result;
     }
 
-    public registerIframeBroadcaster(context: string, name: string): ICommunicationClient {
+    public registerIframeBroadcaster(name: string): ICommunicationClient {
         const existingClient = this.clients.find(c => c.name === name);
         if (existingClient) {
             return existingClient;
         }
 
-        const result: ICommunicationClient = new IframeCommunicationBroadcaster(this, context, name);
+        const result: ICommunicationClient = new IframeCommunicationBroadcaster(this, name);
 
         this.clients.push(result);
 
@@ -39,32 +40,21 @@ export class CommunicationHub {
         }
     }
 
-    public publish(topic: string, value: ValueType, client: ICommunicationClient): void {
+    public publish(subject: string, value: ValueType, client: ICommunicationClient): void {
         for (const existingClient of this.clients){
             if (existingClient === client){
                 continue;
             }
 
-            if (existingClient instanceof IframeCommunicationBroadcaster){
-                existingClient.publish(topic, value);
+            if (existingClient instanceof CommunicationBroadcaster){
+                existingClient.publish(subject, value);
             }
-            else if (existingClient.subscribedTopics[topic]){
-                existingClient.subscribedTopics[topic](value);
+            else if (existingClient.subscribedSubjects[subject]){
+                existingClient.subscribedSubjects[subject](value);
             }
         }
     }
 
-    public subscribe(topic: string, onChange: OnChangeType, client: ICommunicationClient): void {
-        let topicList: string[] = [];
-
-        for (const client of this.clients.filter(c => !(c instanceof IframeCommunicationBroadcaster))){
-            topicList = topicList.concat(Object.keys(client.subscribedTopics));
-        }
-
-        const uniqueTopics: string[] = topicList.filter((value, index, self) => self.indexOf(value) === index);
-
-        for (const iframeClient of this.clients.filter(c => c instanceof IframeCommunicationBroadcaster)){
-            (iframeClient as IframeCommunicationBroadcaster).setInternalTopics(uniqueTopics);
-        }
+    public subscribe(subject: string, onChange: OnChangeType, client: ICommunicationClient): void {
     }
 }

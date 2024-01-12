@@ -3,8 +3,8 @@ import {MessageType, OnChangeType, ValueType} from "./interfaces";
 import {CommunicationHub} from "./communication.hub";
 
 export class IframeCommunicationBroadcaster extends CommunicationBroadcaster {
-    constructor(hub: CommunicationHub, private contextWindow: Window) {
-        super(hub);
+    constructor(hub: CommunicationHub, name: string, private contextWindow: Window) {
+        super(hub, name);
 
         try {
 
@@ -17,7 +17,7 @@ export class IframeCommunicationBroadcaster extends CommunicationBroadcaster {
 
             switch (event.data.type) {
               case MessageType.Publish:
-                this.hub.publish(event.data.topic, event.data.value, this);
+                this.hub.publish(event.data.subject, event.data.value, this);
                 break;
             }
           });
@@ -26,14 +26,14 @@ export class IframeCommunicationBroadcaster extends CommunicationBroadcaster {
           console.log(e);
         }
     }
-    public override publish(topic: string, value: ValueType): void {
+    public override publish(subject: string, value: ValueType): void {
         if (!window || !window.postMessage) {
             return;
         }
 
         const messageObject = {
             type: MessageType.Publish,
-            topic: topic,
+            subject: subject,
             value: value
         };
 
@@ -45,6 +45,6 @@ export class IframeCommunicationBroadcaster extends CommunicationBroadcaster {
 
         console.log(message);
     }
-    public override subscribe(topic: string, onChange: OnChangeType): void {
+    public override subscribe(subject: string, onChange: OnChangeType): void {
     }
 }

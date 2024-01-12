@@ -2,18 +2,20 @@ export type ValueType = any;
 export type OnChangeType = (newValue: ValueType) => void;
 
 export interface ICommunicationClient {
-    subscribedTopics: { [topic: string] : OnChangeType};
+    name: string;
 
-    publish(topic: string, value: ValueType): void;
+    subscribedSubjects: { [subject: string] : OnChangeType};
 
-    subscribe(topic: string, onChange: OnChangeType): void;
+    publish(subject: string, value: ValueType): void;
+
+    subscribe(subject: string, onChange: OnChangeType): void;
 }
 
 export interface IDisposable {
     dispose(): void;
 }
 export enum MessageType {
-    Publish = 0,
+    Publish = 1,
 }
 
 

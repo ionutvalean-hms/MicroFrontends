@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import {CommunicationHub} from "../services/communication.hub";
@@ -22,7 +22,7 @@ export class AppComponent {
 
     this.hub = new CommunicationHub();
 
-    this.client = this.hub.registerClient();
+    this.client = this.hub.registerClient("shellClient");
 
   }
 
@@ -30,14 +30,14 @@ export class AppComponent {
   ngAfterViewInit(): void {
     let iframe = document.getElementById("reactIframe") as any;
 
-    this.hub.registerIframeBroadcaster(iframe.contentWindow);
+    this.hub.registerIframeBroadcaster("reactIframe", iframe.contentWindow);
 
     // hub.registerIframeBroadcaster(iframe.contentWindow);
 
     this.client.subscribe("reactTopic", (value) => {
       this.value = value;
 
-      console.log(value);
+      console.log(`new value (${value}) has been published on the subjectA`);
     });
 
   }

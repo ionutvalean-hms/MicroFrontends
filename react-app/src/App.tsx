@@ -6,7 +6,7 @@ import {useState} from "react";
 
 function App() {
     const hub: CommunicationHub = (window as any).hub
-    hub.registerIframeBroadcaster("http://localhost:3000/", "reactIFrameBroadcaster");
+    hub.registerIframeBroadcaster("reactIFrameBroadcaster");
     const client: ICommunicationClient = hub.registerClient("reactCommunicationClient");
     const [text, setText] = useState("react initial text");
 
@@ -20,12 +20,12 @@ function App() {
             <textarea style={{width: "100%"}} value={text} onChange={onValueChanged}></textarea>
 
             <button onClick={(): void => {
-                client.publish("reactTopic", text);
+                client.publish("reactSubject", text);
             }}>Publish</button>
 
             <button onClick={(): void => {
-                client.subscribe("shellTopic", newValue => setText(newValue));
-            }}>Subscribe to shell topic</button>
+                client.subscribe("shellSubject", newValue => setText(newValue));
+            }}>Subscribe to shell subject</button>
         </div>
     );
 }

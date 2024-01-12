@@ -4,11 +4,11 @@ export type OnChangeType = (newValue: ValueType) => void;
 export interface ICommunicationClient {
     name: string;
 
-    subscribedTopics: { [topic: string] : OnChangeType};
+    subscribedSubjects: { [subject: string] : OnChangeType};
 
-    publish(topic: string, value: ValueType): void;
+    publish(subject: string, value: ValueType): void;
 
-    subscribe(topic: string, onChange: OnChangeType): void;
+    subscribe(subject: string, onChange: OnChangeType): void;
 }
 
 export interface IDisposable {
