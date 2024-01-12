@@ -34,7 +34,7 @@ export class AppComponent {
 
     // hub.registerIframeBroadcaster(iframe.contentWindow);
 
-    this.client.subscribe("reactTopic", (value) => {
+    this.client.subscribe("reactSubject", (value) => {
       this.value = value;
 
       console.log(`new value (${value}) has been published on the subjectA`);
@@ -45,7 +45,7 @@ export class AppComponent {
 
   onPublishClick() {
     if (this.client) {
-      this.client.publish("shellTopic", this.value);
+      this.client.publish("shellSubject", this.value);
     }
   }
 }
